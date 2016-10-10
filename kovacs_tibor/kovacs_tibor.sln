@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "week4_yellow_image_border",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "week5_draw_on_video_frames", "week5_draw_on_video_frames\week5_draw_on_video_frames.csproj", "{4250E3E1-0359-4600-ACC9-1AEACB5F1562}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "week6_red_spot_counter", "week6_red_spot_counter\week6_red_spot_counter.csproj", "{6A5D024C-A36C-46AF-8933-3BEAA77CB988}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4250E3E1-0359-4600-ACC9-1AEACB5F1562}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4250E3E1-0359-4600-ACC9-1AEACB5F1562}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4250E3E1-0359-4600-ACC9-1AEACB5F1562}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A5D024C-A36C-46AF-8933-3BEAA77CB988}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A5D024C-A36C-46AF-8933-3BEAA77CB988}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A5D024C-A36C-46AF-8933-3BEAA77CB988}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A5D024C-A36C-46AF-8933-3BEAA77CB988}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
