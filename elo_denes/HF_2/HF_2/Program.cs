@@ -11,15 +11,15 @@ namespace HF_2
     {
         static void Main(string[] args)
         {
-            //Console.WriteLine("Please give me an input file:");
-            //String input = Console.ReadLine();
+            Console.WriteLine("Please give me an input file:");
+            String input = Console.ReadLine();
             Console.WriteLine("Please give me an output file:");
             String output = Console.ReadLine();
 
             try
             {
 
-                VideoCapture inputvideo = new VideoCapture(0);
+                VideoCapture inputvideo = new VideoCapture(input);
                 if (!inputvideo.IsOpened())
                 {
                     throw new Exception("Input Error!");
