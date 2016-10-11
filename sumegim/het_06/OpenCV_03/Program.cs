@@ -1,9 +1,5 @@
 ﻿using OpenCvSharp;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenCV_03
 {
@@ -40,13 +36,13 @@ namespace OpenCV_03
             Cv2.CvtColor(dilated, reddots_bgr, ColorConversionCodes.GRAY2BGR);
 
             Random r = new Random();
+            Vec3b a = new Vec3b();
             int red_cnt = 0;
             
             for (int i = 1; i < reddots_bgr.Width; i++)
             {
                 for (int j = 1; j < reddots_bgr.Height; j++)
                 {
-                    Vec3b a = new Vec3b();
                     a = reddots_bgr.Get<Vec3b>(j, i);
 
                     if (a.Item0 == 255 && a.Item1 == 255 && a.Item2 == 255)
