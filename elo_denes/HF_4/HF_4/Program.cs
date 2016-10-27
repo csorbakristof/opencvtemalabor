@@ -11,9 +11,9 @@ namespace HF_4
     {
         static void Main(string[] args)
         {
-            VideoCapture video = new VideoCapture(0);
+            VideoCapture video = new VideoCapture(@"F:\mog2sample.MOV");
             int keyPressed=0;
-            BackgroundSubtractorMOG2 mog2 = BackgroundSubtractorMOG2.Create();
+            BackgroundSubtractorMOG2 mog2 = BackgroundSubtractorMOG2.Create(500,16,false);
             Mat frame = new Mat();
             Mat motionObjects = new Mat();
 
@@ -28,7 +28,6 @@ namespace HF_4
                 {
                     video.Read(frame);
                     mog2.Apply(frame, motionObjects);
-
                     Cv2.ImShow("Original", frame);
                     Cv2.ImShow("Motion Objects", motionObjects);
 
