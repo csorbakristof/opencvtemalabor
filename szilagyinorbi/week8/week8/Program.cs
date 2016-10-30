@@ -28,6 +28,9 @@ namespace week8
             Mat gray = new Mat();
             Mat edge = new Mat();
 
+            Scalar color = new Scalar(255.0d, 255.0d, 255.0d);
+            Point pos = new Point(5.0, 15.0);
+
             while (capture.Read(frame))
             {
                 int count = 0;
@@ -45,9 +48,8 @@ namespace week8
                             count++;
 
                 //Arány
-                double ratio = (double)count/(edge.Width*edge.Height);
-                string text = "Ratio: " + ratio + "%";
-                Cv2.PutText(edge, text, new Point(5.0,15.0), HersheyFonts.HersheySimplex, 0.5d, new Scalar(255.0d, 255.0d, 255.0d));
+                double ratio = (double)count/(edge.Width*edge.Height) * 100;
+                Cv2.PutText(edge, "Ratio: " + ratio + "%", pos, HersheyFonts.HersheySimplex, 0.5d, color);
 
                 //Ablakok megjelenítése
                 Cv2.ImShow("Frame",frame);
