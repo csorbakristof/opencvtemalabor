@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "week7_moving_object_detecti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "week8_edge_detection", "week8_edge_detection\week8_edge_detection.csproj", "{A7F698EC-46B6-4732-8F47-CD564CC57BD2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "week9_drawing", "week9_drawing\week9_drawing.csproj", "{9C1844E0-1419-444D-BE89-06E46CB517E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A7F698EC-46B6-4732-8F47-CD564CC57BD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7F698EC-46B6-4732-8F47-CD564CC57BD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7F698EC-46B6-4732-8F47-CD564CC57BD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C1844E0-1419-444D-BE89-06E46CB517E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C1844E0-1419-444D-BE89-06E46CB517E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C1844E0-1419-444D-BE89-06E46CB517E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C1844E0-1419-444D-BE89-06E46CB517E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
