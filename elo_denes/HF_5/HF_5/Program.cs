@@ -1,64 +1,61 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenCvSharp;
 
-namespace HF_5
+namespace week8
 {
     class Program
     {
+
+        private const double highThreshold = 200.0;
+        private const double lowThreshold = 60.0;
+
+        public static bool isWhite(Vec3b pixel)
+        {
+            return pixel.Item0 == 255 && pixel.Item1 == 255 && pixel.Item2 == 255;
+        }
+
         static void Main(string[] args)
         {
+            //Webcam 25 fps-el
+            VideoCapture capture = new VideoCapture(0) { Fps = 25 };
 
-            Console.WriteLine("Please give me an input file");
-            String inputfile = Console.ReadLine();
-            VideoCapture input = new VideoCapture(inputfile);
+            Mat frame = new Mat();
+            Mat gray = new Mat();
+            Mat edge = new Mat();
 
-            if (!input.IsOpened()) { Console.WriteLine("Problem with the input!"); Console.ReadKey(); }
-            else
+            while (capture.Read(frame))
             {
+                int count = 0;
 
-                Mat frame = new Mat();
-                Mat segmentedFrame = new Mat();
-                int key = 0;
+                //Szürkeárnyalatos kép előállítása
+                Cv2.CvtColor(frame, gray, ColorConversionCodes.RGB2GRAY);
 
-                Point p = new Point(10d, 30d);
-                Scalar color = new Scalar(0, 0, 255);
-                double size = 1d;
-                double ratio = 0d;
+                //Élkeresés
+                Cv2.Canny(gray, edge, lowThreshold, highThreshold);
 
-                while (key != 27)
-                {
+                //Fehér pixelek száma
+                for (int i = 0; i < edge.Width; i++)
+                    for (int j = 0; j < edge.Height; j++)
+                        if (isWhite(edge.Get<Vec3b>(j, i)))
+                            count++;
 
-                    input.Read(frame);
-                    Cv2.Canny(frame, segmentedFrame, 70, 100,3);
+                //Arány
+                double ratio = (double)count / (edge.Width * edge.Height);
+                string text = "Ratio: " + ratio + "%";
+                Cv2.PutText(edge, text, new Point(5.0, 15.0), HersheyFonts.HersheySimplex, 0.5d, new Scalar(255.0d, 255.0d, 255.0d));
 
-                    double whitePixel = 0;
-
-                    for(int i = 0; i<segmentedFrame.Width; i++)
-                    {
-                        for (int j = 0; j < segmentedFrame.Height; j++)
-                        {
-                            if (segmentedFrame.At<char>(i, j) != 0)
-                                whitePixel++;
-                        }
-                    }
-
-                    ratio = (100 * whitePixel) / (segmentedFrame.Cols * segmentedFrame.Rows);
-
-                    Cv2.PutText(frame, "Ratio: "+ ratio.ToString() + "%", p, HersheyFonts.HersheySimplex, size, color, 1);
-
-                    Cv2.ImShow("Output", segmentedFrame);
-                    Cv2.ImShow("Original", frame);
-                    
-                    key = Cv2.WaitKey(5);
-
-                }
-
+                //Ablakok megjelenítése
+                Cv2.ImShow("Frame", frame);
+                Cv2.ImShow("Edge", edge);
+                if (Cv2.WaitKey((int)capture.Fps) != -1) break;
             }
 
+            Cv2.DestroyAllWindows();
         }
     }
 }
