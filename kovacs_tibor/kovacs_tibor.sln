@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "week8_edge_detection", "wee
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "week9_drawing", "week9_drawing\week9_drawing.csproj", "{9C1844E0-1419-444D-BE89-06E46CB517E6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "week10_mandelbrot_set", "week10_mandelbrot_set\week10_mandelbrot_set.csproj", "{BC5F2441-0219-4D37-9A77-A4AC9DF4FCC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{9C1844E0-1419-444D-BE89-06E46CB517E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C1844E0-1419-444D-BE89-06E46CB517E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C1844E0-1419-444D-BE89-06E46CB517E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC5F2441-0219-4D37-9A77-A4AC9DF4FCC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC5F2441-0219-4D37-9A77-A4AC9DF4FCC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC5F2441-0219-4D37-9A77-A4AC9DF4FCC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC5F2441-0219-4D37-9A77-A4AC9DF4FCC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
