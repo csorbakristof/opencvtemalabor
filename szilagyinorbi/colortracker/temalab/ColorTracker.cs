@@ -12,19 +12,24 @@ namespace temalab
         private int threshold = 20;
         private VideoCapture video;
 
-        private readonly Window hsvWindow = new Window("HSV");
+        private BackgroundSubtractorMOG2 mog;
+
+        //private readonly Window hsvWindow = new Window("HSV");
         private readonly Window originalWindow = new Window("Original");
-        private readonly Window maskWindow = new Window("Mask");
+        private readonly Window maskColorWindow = new Window("Color Mask");
+        private readonly Window mog2Window = new Window("Mog2 Mask");
+        private readonly Window maskAndWindow = new Window("AND Mask");
 
         public ColorTracker(VideoCapture video)
         {
-
             this.video = video;
 
             //Kattintásra új szín felvétele
-            hsvWindow.OnMouseCallback += GetColor;
-            maskWindow.OnMouseCallback += GetColor;
+            //hsvWindow.OnMouseCallback += GetColor;
+            maskColorWindow.OnMouseCallback += GetColor;
             originalWindow.OnMouseCallback += GetColor;
+
+            mog = BackgroundSubtractorMOG2.Create(200);
 
             //Threshold mértékének változtatása csúszka segítésével
             new CvTrackbar("Threshold", "Original", threshold, 50, ThresholdChange);
@@ -73,24 +78,30 @@ namespace temalab
             Cv2.GaussianBlur(hsv, hsv, new Size(9, 9), 2, 2);
 
             //Adott színek kimaszkolása
-            Mat mask = colorStack.GetMat(hsv);
+            Mat maskColor = colorStack.GetMat(hsv);
+            Mat maskMog2 = new Mat();
+            Mat maskAnd = new Mat();
 
-            /*
-            Cv2.Erode(mask,mask,new Mat(),null,3);
-            Cv2.Dilate(mask, mask, new Mat(),null,3);
-            */
-
+            mog.Apply(hsv, maskMog2);
+            
             //Kis foltok eltűntetése a maszkból
             //MorphologyEx Closing = Erode + Dilate
-            Cv2.MorphologyEx(mask, mask, MorphTypes.Close, null, null, 3);
+            Mat kernel = new Mat(3, 3, MatType.CV_8UC1, 1.0);
+            Cv2.MorphologyEx(maskColor, maskColor, MorphTypes.Close, kernel, new Point(-1, -1), 2);
+
+            //2 maszk összeÉSelése
+            Cv2.BitwiseAnd(maskColor, maskMog2, maskAnd);
+            Cv2.MorphologyEx(maskAnd, maskAnd, MorphTypes.Close, kernel, new Point(-1, -1), 2);
 
             //Maszkban lévő fehér pixeleket bezáró négyzet rajzolása
-            var rect = Cv2.BoundingRect(mask);
+            var rect = Cv2.BoundingRect(maskAnd);
             Cv2.Rectangle(original, rect, Scalar.LightGreen);
 
             //Ablakok megjelenítése
-            Cv2.ImShow(hsvWindow.Name, hsv);
-            Cv2.ImShow(maskWindow.Name, mask);
+            //Cv2.ImShow(hsvWindow.Name, hsv);
+            Cv2.ImShow(maskAndWindow.Name, maskAnd);
+            Cv2.ImShow(maskColorWindow.Name, maskColor);
+            Cv2.ImShow(mog2Window.Name, maskMog2);
             Cv2.ImShow(originalWindow.Name, original);
         }
 

@@ -14,6 +14,7 @@ namespace temalab
             video.Fps = 30;
             */
 
+            Console.Write("Video file: ");
             VideoCapture video = new VideoCapture(Console.ReadLine());
             ColorTracker c = new ColorTracker(video);
             c.Open(true);

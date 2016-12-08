@@ -16,7 +16,8 @@ namespace temalab
         }
 
         public void Pop() {
-            list.RemoveAt(list.Count - 1);
+            if (list.Count > 0)
+                list.RemoveAt(list.Count - 1);
         }
 
         public void Clear()

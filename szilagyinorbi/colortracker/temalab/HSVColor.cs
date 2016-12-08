@@ -35,11 +35,11 @@ namespace temalab
             {
                 threshold = value;
                 LowThreshold = new Scalar(
-                    (H - value < 0 ? 0 : H - value),
+                    (H - 5 < 0 ? 0 : H - 5),
                     (S - value < 0 ? 0 : S - value),
                     (V - value < 0 ? 0 : V - value));
                 HighThreshold = new Scalar(
-                    (H + value > 180 ? 180 : H + value),
+                    (H + 5 > 180 ? 180 : H + 5),
                     (S + value > 255 ? 255 : S + value),
                     (V + value > 255 ? 255 : V + value));
             }
