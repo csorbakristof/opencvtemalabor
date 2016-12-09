@@ -9,26 +9,24 @@ namespace temalab
     class ColorStack
     {
 
-        private List<HSVColor> list = new List<HSVColor>();
+        private readonly List<HSVColor> list = new List<HSVColor>();
 
-        public void Add(HSVColor c) {
-            list.Add(c);
+        public void Add(HSVColor color) {
+            list.Add(color);
         }
 
         public void Pop() {
             if (list.Count > 0)
+            {
                 list.RemoveAt(list.Count - 1);
+                Console.WriteLine("Last color popped!");
+            }
         }
 
         public void Clear()
         {
             list.Clear();
-        }
-
-        public void ChangeThreshold(int threshold)
-        {
-            foreach (var c in list)
-                c.Threshold = threshold;
+            Console.WriteLine("Stack cleared!");
         }
 
         public Mat GetMat(Mat m)
@@ -46,6 +44,7 @@ namespace temalab
                     Cv2.InRange(m, list[i].LowThreshold, list[i].HighThreshold, range);
                     Cv2.BitwiseOr(mask, range, mask);
                 }
+                range.Release();
             }
             return mask;
         } 

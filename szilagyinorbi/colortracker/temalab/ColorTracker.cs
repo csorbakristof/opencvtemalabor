@@ -9,7 +9,6 @@ namespace temalab
         private readonly ColorStack colorStack = new ColorStack();
         private Mat hsv = new Mat();
         private Mat original = new Mat();
-        private int threshold = 20;
         private VideoCapture video;
 
         private BackgroundSubtractorMOG2 mog;
@@ -29,10 +28,10 @@ namespace temalab
             maskColorWindow.OnMouseCallback += GetColor;
             originalWindow.OnMouseCallback += GetColor;
 
-            mog = BackgroundSubtractorMOG2.Create(200);
+            mog = BackgroundSubtractorMOG2.Create(150);
 
             //Threshold mértékének változtatása csúszka segítésével
-            new CvTrackbar("Threshold", "Original", threshold, 50, ThresholdChange);
+            new CvTrackbar("Threshold", "Original", HSVColor.Threshold, 50, (pos, userdata) => HSVColor.Threshold = pos);
         }
 
         public void Open(bool loop)
@@ -87,11 +86,14 @@ namespace temalab
             //Kis foltok eltűntetése a maszkból
             //MorphologyEx Closing = Erode + Dilate
             Mat kernel = new Mat(3, 3, MatType.CV_8UC1, 1.0);
-            Cv2.MorphologyEx(maskColor, maskColor, MorphTypes.Close, kernel, new Point(-1, -1), 2);
+            Point point = new Point(-1, -1);
+            Cv2.MorphologyEx(maskColor, maskColor, MorphTypes.Close, kernel, point, 2);
 
-            //2 maszk összeÉSelése
+            //maskColor és maskMog2 közös maszkja
             Cv2.BitwiseAnd(maskColor, maskMog2, maskAnd);
-            Cv2.MorphologyEx(maskAnd, maskAnd, MorphTypes.Close, kernel, new Point(-1, -1), 2);
+            Cv2.MorphologyEx(maskAnd, maskAnd, MorphTypes.Close, kernel, point, 2);
+
+            kernel.Release();
 
             //Maszkban lévő fehér pixeleket bezáró négyzet rajzolása
             var rect = Cv2.BoundingRect(maskAnd);
@@ -103,23 +105,18 @@ namespace temalab
             Cv2.ImShow(maskColorWindow.Name, maskColor);
             Cv2.ImShow(mog2Window.Name, maskMog2);
             Cv2.ImShow(originalWindow.Name, original);
+
+            maskAnd.Release();
+            maskColor.Release();
+            maskMog2.Release();
         }
 
-        //Threshold csúszka értékének változtatása
-        private void ThresholdChange(int pos, object userdata)
-        {
-            threshold = pos;
-
-            //Összes szín threshold értékének változtatása
-            colorStack.ChangeThreshold(pos);
-        }
-
-        //Kattintás esetén az új szín felvétele a HSV ablakból
+        //Kattintás esetén az új szín felvétele
         private void GetColor(MouseEvent eventype, int x, int y, MouseEvent flags) {
             if (eventype == MouseEvent.LButtonDown) {
                 Vec3b p = hsv.Get<Vec3b>(y, x);
                 Console.WriteLine($"H: {p.Item0} S: {p.Item1} V: {p.Item2} added to the stack!");
-                colorStack.Add(new HSVColor(p.Item0, p.Item1, p.Item2, threshold));
+                colorStack.Add(new HSVColor(p.Item0, p.Item1, p.Item2));
                 Track();
             }
         }
