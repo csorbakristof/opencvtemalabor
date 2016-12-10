@@ -9,32 +9,32 @@ namespace temalab
         private readonly ColorStack colorStack = new ColorStack();
         private Mat hsv = new Mat();
         private Mat original = new Mat();
-        private VideoCapture video;
-
         private BackgroundSubtractorMOG2 mog;
+        private int speed = 3;
 
         //private readonly Window hsvWindow = new Window("HSV");
         private readonly Window originalWindow = new Window("Original");
         private readonly Window maskColorWindow = new Window("Color Mask");
         private readonly Window mog2Window = new Window("Mog2 Mask");
         private readonly Window maskAndWindow = new Window("AND Mask");
+        private readonly Window settignsWindow = new Window("Settings");
 
-        public ColorTracker(VideoCapture video)
+        public ColorTracker()
         {
-            this.video = video;
-
             //Kattintásra új szín felvétele
             //hsvWindow.OnMouseCallback += GetColor;
             maskColorWindow.OnMouseCallback += GetColor;
+            maskAndWindow.OnMouseCallback += GetColor;
             originalWindow.OnMouseCallback += GetColor;
 
             mog = BackgroundSubtractorMOG2.Create(150);
 
             //Threshold mértékének változtatása csúszka segítésével
-            new CvTrackbar("Threshold", "Original", HSVColor.Threshold, 50, (pos, userdata) => HSVColor.Threshold = pos);
+            new CvTrackbar("Threshold", settignsWindow.Name, HSVColor.Threshold, 50, (pos, userdata) => HSVColor.Threshold = pos);
+            new CvTrackbar("Speed", settignsWindow.Name, speed, 5, (pos, userdata) => speed = pos);
         }
 
-        public void Open(bool loop)
+        public void Open(VideoCapture video, bool loop)
         {
             int keyPressed = -1;
             bool first = true;
@@ -53,7 +53,7 @@ namespace temalab
                 if (first) { Cv2.WaitKey(); first = false; }
 
                 //Billenytű lenyomásra várás
-                keyPressed = Cv2.WaitKey((int)(1000.0 / video.Fps * 3));
+                keyPressed = Cv2.WaitKey(speed > 0 ? (int)(1000.0 / video.Fps * speed) : 0);
                 switch (keyPressed)
                 {
                     case 'e': colorStack.Clear(); break;    //E - Összes szín kivétele a maszkból
@@ -74,7 +74,8 @@ namespace temalab
             Cv2.CvtColor(original, hsv, ColorConversionCodes.BGR2HSV);
 
             //Kép homályosítása, hogy kevésbe legyen zajos
-            Cv2.GaussianBlur(hsv, hsv, new Size(9, 9), 2, 2);
+            //Cv2.GaussianBlur(hsv, hsv, new Size(9, 9), 2, 2);
+            Cv2.MedianBlur(hsv,hsv,5);
 
             //Adott színek kimaszkolása
             Mat maskColor = colorStack.GetMat(hsv);
@@ -87,11 +88,16 @@ namespace temalab
             //MorphologyEx Closing = Erode + Dilate
             Mat kernel = new Mat(3, 3, MatType.CV_8UC1, 1.0);
             Point point = new Point(-1, -1);
-            Cv2.MorphologyEx(maskColor, maskColor, MorphTypes.Close, kernel, point, 2);
+
+            Cv2.MorphologyEx(maskColor, maskColor, MorphTypes.Open, kernel, point, 1);
+            Cv2.MorphologyEx(maskMog2, maskMog2, MorphTypes.Open, kernel, point, 1);
+
+            Cv2.MorphologyEx(maskColor, maskColor, MorphTypes.Close, kernel, point, 1);
+            Cv2.MorphologyEx(maskMog2, maskMog2, MorphTypes.Close, kernel, point, 1);
 
             //maskColor és maskMog2 közös maszkja
             Cv2.BitwiseAnd(maskColor, maskMog2, maskAnd);
-            Cv2.MorphologyEx(maskAnd, maskAnd, MorphTypes.Close, kernel, point, 2);
+            //Cv2.MorphologyEx(maskAnd, maskAnd, MorphTypes.Close, kernel, point, 2);
 
             kernel.Release();
 

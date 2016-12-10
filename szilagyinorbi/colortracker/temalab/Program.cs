@@ -16,8 +16,8 @@ namespace temalab
 
             Console.Write("Video file: ");
             VideoCapture video = new VideoCapture(Console.ReadLine());
-            ColorTracker c = new ColorTracker(video);
-            c.Open(true);
+            ColorTracker c = new ColorTracker();
+            c.Open(video,true);
         }
     }
 }
