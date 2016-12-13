@@ -43,26 +43,17 @@ namespace week8_edge_detection
 
         private static Mat GetEdgeImage(Mat image)
         {
+            Mat grayImage = new Mat();
+            Cv2.CvtColor(image, grayImage, ColorConversionCodes.RGB2GRAY);
             Mat edgeImage = new Mat();
-            Cv2.Canny(image, edgeImage, THRESHOLD_1, THRESHOLD_2);
+            Cv2.Canny(grayImage, edgeImage, THRESHOLD_1, THRESHOLD_2);
             return edgeImage;
         }
 
         private static double GetEdgeRatio(Mat image)
         {
-            double edgePixelCount = 0.0d;
-            for (int row = 0; row < image.Height; ++row)
-            {
-                for (int column = 0; column < image.Width; ++column)
-                {
-                    if (image.At<char>(row, column) != 0)
-                    {
-                        edgePixelCount += 1;
-                    }
-                }
-            }
-
-            return  edgePixelCount / (image.Width * image.Height);
+            int edgePixelCount = image.CountNonZero();
+            return  (double)edgePixelCount / (image.Width * image.Height);
         }
 
     }
